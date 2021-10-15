@@ -8,6 +8,7 @@ import org.bukkit.scheduler.BukkitTask;
 import xyz.oribuin.eternalcrates.EternalCrates;
 import xyz.oribuin.eternalcrates.crate.Crate;
 import xyz.oribuin.eternalcrates.particle.ParticleData;
+import xyz.oribuin.eternalcrates.util.PluginUtils;
 
 import java.util.List;
 
@@ -38,9 +39,11 @@ public abstract class ParticleAnimation extends Animation {
      * @param count the amount of particles being spawned
      */
     public void play(Crate crate, Location loc, int count, Player player) {
+        final Location centerLoc = PluginUtils.getBlockLoc(loc).clone().add(0.5, 0.5, 0.5);
+
         final BukkitTask task = Bukkit.getScheduler().runTaskTimerAsynchronously(EternalCrates.getInstance(), () -> {
             this.updateTimer();
-            this.particleLocations(loc.clone().add(0.0, 1.0, 0.0)).forEach(location -> particleData.spawn(location, count));
+            this.particleLocations(centerLoc).forEach(location -> particleData.spawn(location, count));
         }, 0, this.speed);
 
         Bukkit.getScheduler().runTaskLater(EternalCrates.getInstance(), x -> {

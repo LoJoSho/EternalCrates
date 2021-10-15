@@ -5,10 +5,7 @@ import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
 import xyz.oribuin.eternalcrates.EternalCrates;
 import xyz.oribuin.eternalcrates.animation.*;
-import xyz.oribuin.eternalcrates.animation.defaults.CsgoAnimation;
-import xyz.oribuin.eternalcrates.animation.defaults.RingsAnimation;
-import xyz.oribuin.eternalcrates.animation.defaults.SparkleAnimation;
-import xyz.oribuin.eternalcrates.animation.defaults.WheelAnimation;
+import xyz.oribuin.eternalcrates.animation.defaults.*;
 import xyz.oribuin.eternalcrates.particle.ParticleData;
 import xyz.oribuin.eternalcrates.util.PluginUtils;
 import xyz.oribuin.orilibrary.manager.Manager;
@@ -33,7 +30,8 @@ public class AnimationManager extends Manager {
         this.cachedAnimations.put("csgo", new CsgoAnimation());
         this.cachedAnimations.put("rings", new RingsAnimation());
         this.cachedAnimations.put("wheel", new WheelAnimation());
-        this.cachedAnimations.put("sparkle", new SparkleAnimation()); // we may need a better name for this.
+        this.cachedAnimations.put("sparkle", new SparkleAnimation()); // we may need a better name for this.#
+        this.cachedAnimations.put("icosphere", new IcosphereAnimation());
     }
 
     /**
