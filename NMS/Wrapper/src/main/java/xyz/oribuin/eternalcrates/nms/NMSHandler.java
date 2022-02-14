@@ -1,10 +1,13 @@
 package xyz.oribuin.eternalcrates.nms;
 
+import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 public interface NMSHandler {
 
@@ -19,6 +22,11 @@ public interface NMSHandler {
     ItemStack setDouble(ItemStack item, String key, double value);
 
     ItemStack setBoolean(ItemStack item, String key, boolean value);
+
+    Firework spawnClientFirework(Player player, Location loc, FireworkEffect effect);
+
+    void detonateFirework(Firework firework, Player player);
+
 
 //    Entity updateEntity(Player player, Entity entity);
 }

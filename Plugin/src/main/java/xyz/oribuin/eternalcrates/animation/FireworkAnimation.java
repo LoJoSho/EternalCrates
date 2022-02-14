@@ -6,10 +6,10 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import xyz.oribuin.eternalcrates.EternalCrates;
 import xyz.oribuin.eternalcrates.crate.Crate;
+import xyz.oribuin.eternalcrates.nms.NMSAdapter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,20 +69,24 @@ public abstract class FireworkAnimation extends Animation {
             // Spawn the firework
             Bukkit.getScheduler().runTaskLater(EternalCrates.getInstance(), () -> {
 
-                Firework firework = world.spawn(customFirework.location, Firework.class, fireWork -> {
-                    final FireworkMeta meta = fireWork.getFireworkMeta();
+                Firework firework = NMSAdapter.getHandler().spawnClientFirework(player, loc, customFirework.effect);
+                firework.setMetadata("eternalcrates:firework", new FixedMetadataValue(EternalCrates.getInstance(), true));
 
-                    // Set meta because we're not trying to kill anyone here.
-                    fireWork.setMetadata("eternalcrates:firework", new FixedMetadataValue(EternalCrates.getInstance(), true));
-                    meta.addEffect(customFirework.effect);
-                    fireWork.setFireworkMeta(meta);
-                });
+//                Firework firework = world.spawn(customFirework.location, Firework.class, fireWork -> {
+//                    final FireworkMeta meta = fireWork.getFireworkMeta();
+//
+//                    // Set meta because we're not trying to kill anyone here.
+//                    fireWork.setMetadata("eternalcrates:firework", new FixedMetadataValue(EternalCrates.getInstance(), true));
+//                    meta.addEffect(customFirework.effect);
+//                    fireWork.setFireworkMeta(meta);
+//                });
 
                 if (integer == this.fireworkMap.size()) {
                     crate.finish(player);
                 }
 
-                firework.detonate();
+                NMSAdapter.getHandler().detonateFirework(firework, player);
+//                firework.detonate();
                 // Delay each effect by each firework that has been set off.
             }, integer == 0 ? 1 : startNumber.incrementAndGet() * delay);
         });

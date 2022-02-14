@@ -6,12 +6,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_17_R1.util.CraftNamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.oribuin.eternalcrates.nms.NMSHandler;
@@ -87,6 +89,16 @@ public class NMSHandlerImpl implements NMSHandler {
         CompoundTag tag = itemStack.getOrCreateTag();
         tag.putBoolean(key, value);
         return CraftItemStack.asBukkitCopy(itemStack);
+    }
+
+    @Override
+    public Firework spawnClientFirework(Player player, Location loc, FireworkEffect effect) {
+        return null;
+    }
+
+    @Override
+    public void detonateFirework(Firework firework, Player player) {
+
     }
 
     //    @Override

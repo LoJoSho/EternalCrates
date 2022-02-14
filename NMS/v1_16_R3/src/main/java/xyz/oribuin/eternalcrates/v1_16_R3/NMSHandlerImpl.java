@@ -1,12 +1,14 @@
 package xyz.oribuin.eternalcrates.v1_16_R3;
 
 import net.minecraft.server.v1_16_R3.*;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_16_R3.util.CraftNamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.oribuin.eternalcrates.nms.NMSHandler;
@@ -83,6 +85,16 @@ public class NMSHandlerImpl implements NMSHandler {
         NBTTagCompound tag = itemStack.getOrCreateTag();
         tag.setBoolean(key, value);
         return CraftItemStack.asBukkitCopy(itemStack);
+    }
+
+    @Override
+    public Firework spawnClientFirework(Player player, Location loc, FireworkEffect effect) {
+        return null;
+    }
+
+    @Override
+    public void detonateFirework(Firework firework, Player player) {
+
     }
 
     private int getNewEntityId() {

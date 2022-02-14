@@ -3,18 +3,29 @@ package xyz.oribuin.eternalcrates.nms.v1_18_R1;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.protocol.game.ClientboundEntityEventPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.phys.Vec3;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftEnderCrystal;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_18_R1.util.CraftNamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 import xyz.oribuin.eternalcrates.nms.NMSHandler;
 
 import java.lang.reflect.Field;
@@ -90,19 +101,35 @@ public class NMSHandlerImpl implements NMSHandler {
         return CraftItemStack.asBukkitCopy(itemStack);
     }
 
-    //    @Override
-    //    public Entity updateEntity(Player player, Entity entity) {
-    //        final ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
-    //        final CraftEntity craftEntity = (CraftEntity) entity;
-    //        final Location loc = entity.getLocation();
-    //
-    //        ClientboundMoveEntityPacket.PosRot packet = new ClientboundMoveEntityPacket.PosRot(craftEntity.getEntityId(), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch(), entity.isOnGround());
-    //
-    //    }
+    @Override
+    public Firework spawnClientFirework(Player player, Location loc, FireworkEffect effect) {
+        final ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
+        final BlockPos pos = new BlockPos(loc.getX(), loc.getY(), loc.getZ());
+
+        ServerLevel world = ((CraftWorld) loc.getWorld()).getHandle();
+        FireworkRocketEntity entity = net.minecraft.world.entity.EntityType.FIREWORK_ROCKET.create(world, new CompoundTag(), null, null, pos, MobSpawnType.COMMAND, true, false);
+        if (entity == null) {
+            throw new NullPointerException("Unable to create entity from the NBT Provided");
+        }
+
+        Firework firework = (Firework) entity.getBukkitEntity();
+        FireworkMeta meta = firework.getFireworkMeta();
+        meta.addEffect(effect);
+        firework.setFireworkMeta(meta);
+
+        ClientboundAddEntityPacket packet = new ClientboundAddEntityPacket(entity);
+        serverPlayer.connection.send(packet);
+        return firework;
+    }
+
+    @Override
+    public void detonateFirework(Firework firework, Player player) {
+        FireworkRocketEntity entity = (FireworkRocketEntity) ((CraftEntity) firework).getHandle();
+        entity.getLevel().broadcastEntityEvent(entity, (byte) 17);
+    }
 
     private int getNewEntityId() {
         return ENTITY_ID.incrementAndGet();
     }
-
 
 }
