@@ -9,8 +9,25 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import xyz.oribuin.eternalcrates.EternalCrates;
-import xyz.oribuin.eternalcrates.animation.*;
-import xyz.oribuin.eternalcrates.animation.defaults.*;
+import xyz.oribuin.eternalcrates.animation.Animation;
+import xyz.oribuin.eternalcrates.animation.AnimationType;
+import xyz.oribuin.eternalcrates.animation.CustomAnimation;
+import xyz.oribuin.eternalcrates.animation.FireworkAnimation;
+import xyz.oribuin.eternalcrates.animation.GuiAnimation;
+import xyz.oribuin.eternalcrates.animation.HologramAnimation;
+import xyz.oribuin.eternalcrates.animation.ParticleAnimation;
+import xyz.oribuin.eternalcrates.animation.defaults.CelebrationAnimation;
+import xyz.oribuin.eternalcrates.animation.defaults.ChickenAnimation;
+import xyz.oribuin.eternalcrates.animation.defaults.CsgoAnimation;
+import xyz.oribuin.eternalcrates.animation.defaults.EmptyAnimation;
+import xyz.oribuin.eternalcrates.animation.defaults.FountainAnimation;
+import xyz.oribuin.eternalcrates.animation.defaults.PumpkinAnimation;
+import xyz.oribuin.eternalcrates.animation.defaults.QuadAnimation;
+import xyz.oribuin.eternalcrates.animation.defaults.RingsAnimation;
+import xyz.oribuin.eternalcrates.animation.defaults.RippleAnimation;
+import xyz.oribuin.eternalcrates.animation.defaults.SnowmanAnimation;
+import xyz.oribuin.eternalcrates.animation.defaults.SparkleAnimation;
+import xyz.oribuin.eternalcrates.animation.defaults.WheelAnimation;
 import xyz.oribuin.eternalcrates.crate.Crate;
 import xyz.oribuin.eternalcrates.nms.NMSAdapter;
 import xyz.oribuin.eternalcrates.nms.NMSHandler;
@@ -20,13 +37,21 @@ import xyz.oribuin.gui.Item;
 import xyz.oribuin.orilibrary.manager.Manager;
 import xyz.oribuin.orilibrary.util.HexUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class AnimationManager extends Manager {
 
     private final EternalCrates plugin = (EternalCrates) this.getPlugin();
     private final Map<String, Animation> cachedAnimations = new HashMap<>();
+    private boolean hologramsEnabled = false;
 
     public AnimationManager(EternalCrates plugin) {
         super(plugin);
@@ -58,6 +83,7 @@ public class AnimationManager extends Manager {
     @Override
     public void enable() {
         this.plugin.getLogger().info("Loading all the animations for the plugin.");
+        this.hologramsEnabled = this.plugin.getManager(HologramManager.class).getHologramHandler() != null;
 
         // Add the default animations
         // GUI Animations
@@ -118,6 +144,7 @@ public class AnimationManager extends Manager {
         return animation;
     }
 
+
     private Optional<ParticleAnimation> getParticleAni(final FileConfiguration config, final Animation animation) {
         if (!(animation instanceof ParticleAnimation particleAni))
             return Optional.empty();
@@ -164,6 +191,11 @@ public class AnimationManager extends Manager {
         });
 
         return Optional.of(gui);
+    }
+
+    private Optional<HologramAnimation> getHologramAni(FileConfiguration config, Animation animation) {
+        if (!(animation instanceof HologramAnimation holo))
+            return Optional.empty();
     }
 
     /**

@@ -11,6 +11,7 @@ import xyz.oribuin.eternalcrates.listener.PlayerListeners;
 import xyz.oribuin.eternalcrates.manager.AnimationManager;
 import xyz.oribuin.eternalcrates.manager.CrateManager;
 import xyz.oribuin.eternalcrates.manager.DataManager;
+import xyz.oribuin.eternalcrates.manager.HologramManager;
 import xyz.oribuin.eternalcrates.manager.MessageManager;
 import xyz.oribuin.orilibrary.OriPlugin;
 import xyz.oribuin.orilibrary.util.NMSUtil;
@@ -42,6 +43,7 @@ public class EternalCrates extends OriPlugin {
         this.activeUsers = new ArrayList<>();
 
         // Load Other Plugin Managers Later Asynchronously.
+        this.getManager(HologramManager.class);
         this.getManager(AnimationManager.class);
         this.getManager(CrateManager.class);
         this.getManager(DataManager.class);

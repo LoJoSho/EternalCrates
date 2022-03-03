@@ -23,6 +23,18 @@ allprojects {
         maven { url "https://repo.codemc.org/repository/maven-public/" }
         maven { url "https://maven.enginehub.org/repo/" }
         maven { url 'https://jitpack.io' }
+
+        // Required for Hologram Support
+        maven {
+            url = 'https://repo.rosewooddev.io/repository/maven-public'
+            credentials {
+                username project.mavenUser
+                password project.mavenPassword
+                authentication {
+                    basic(BasicAuthentication)
+                }
+            }
+        }
     }
 }
 
