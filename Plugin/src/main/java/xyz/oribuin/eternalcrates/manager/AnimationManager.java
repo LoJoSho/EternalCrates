@@ -1,13 +1,13 @@
 package xyz.oribuin.eternalcrates.manager;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import xyz.oribuin.eternalcrates.EternalCrates;
 import xyz.oribuin.eternalcrates.animation.*;
 import xyz.oribuin.eternalcrates.animation.defaults.*;
@@ -224,8 +224,8 @@ public class AnimationManager extends Manager {
                 // Add enchantment to item
                 itemBuilder.addEnchant(enchantment, PluginUtils.get(enchants, s, 1));
             });
-
         ItemStack item = itemBuilder.create();
+
         // Add any nbt tags somehow, I pray this works.
         final ConfigurationSection nbt = config.getConfigurationSection(path + ".nbt");
         if (nbt != null) {
@@ -255,6 +255,17 @@ public class AnimationManager extends Manager {
                     item = handler.setDouble(item, s, nbt.getDouble(s));
 
                 // thank god its over
+            }
+        }
+
+        if (material.equals(Material.LEATHER_BOOTS) || material.equals(Material.LEATHER_LEGGINGS) || material.equals(Material.LEATHER_CHESTPLATE) || material.equals(Material.LEATHER_HELMET)) {
+            if (item.hasItemMeta()) {
+                ItemMeta meta = item.getItemMeta();
+                LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) meta;
+                Color color = PluginUtils.fromHex(PluginUtils.get(config, path + ".color", "FFFFFF"));
+                leatherArmorMeta.setColor(color);
+                leatherArmorMeta.addItemFlags(ItemFlag.HIDE_DYE);
+                item.setItemMeta(meta);
             }
         }
 
