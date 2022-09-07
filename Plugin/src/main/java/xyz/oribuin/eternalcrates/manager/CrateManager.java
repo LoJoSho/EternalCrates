@@ -171,7 +171,6 @@ public class CrateManager extends Manager {
         ItemStack item = new Item.Builder(animationManager.itemFromConfig(config, "key"))
                 .setNBT(plugin, "crateKey", crate.getId().toLowerCase())
                 .create();
-
         if (item == null) {
             item = new Item.Builder(Material.TRIPWIRE_HOOK)
                     .setName(HexUtils.colorify("#99ff99&lCrate Key &7» &f" + crate.getId()))
@@ -187,6 +186,9 @@ public class CrateManager extends Manager {
         assert meta != null;
         final PersistentDataContainer cont = meta.getPersistentDataContainer();
         cont.set(new NamespacedKey(plugin, "crateKey"), PersistentDataType.STRING, crate.getId().toLowerCase());
+        if (config.contains("key.modeldata")) {
+            meta.setCustomModelData(config.getInt("key.modeldata", 0));
+        }
         item.setItemMeta(meta);
         crate.setKey(item);
         this.plugin.getLogger().info("Registered Crate: " + crate.getId() + " with " + crate.getRewardMap().size() + " rewards!");
